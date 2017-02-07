@@ -79,9 +79,9 @@ public class IssueDAO implements Dao<Issue> {
 
 	}
 
-	public List<Issue> findUserDetails(int userId) {
+	public List<Issue> findUserDetails(Issue issues) {
 		String sql = "SELECT ID,USER_ID,SUBJECT,DESCRIPTION,STATUS,PRIORITY FROM ISSUES WHERE USER_ID=?";
-		Object[] params = { userId };
+		Object[] params = { issues.getUserId().getId() };
 		return jdbcTemplate.query(sql, params, (rs, rowNo) -> {
 			Issue issue = new Issue();
 			issue.setId(rs.getInt("ID"));

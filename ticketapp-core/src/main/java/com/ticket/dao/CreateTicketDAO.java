@@ -4,12 +4,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.ticket.exception.PersistenceException;
+import com.ticket.exception.ValidatorException;
 import com.ticket.model.Department;
 import com.ticket.model.Employee;
 import com.ticket.model.Issue;
 import com.ticket.model.Role;
 import com.ticket.model.Solution;
 import com.ticket.model.User;
+import com.ticket.util.MailUtil;
 
 public class CreateTicketDAO {
 	Issue issue = new Issue();
@@ -65,9 +67,15 @@ public class CreateTicketDAO {
 				EmployeeDAO employeeDao = new EmployeeDAO();
 				int employeeId = employeeDao.findEmployeeId(departmentId, role.getId()).getId();
 				employee.setId(employeeId);
-
+				String employeeEmail=employeeDao.findEmployeeEmailId(employeeId).getEmailId();
 				solution.setEmployeeId(employee);
 				solutionDao.save(solution);
+				try {
+					MailUtil.sendSimpleMail(emailId,"Ticket Created Sucessfully.Your Ticket id is:",issueId);
+					MailUtil.sendSimpleMail(employeeEmail,"A ticket has been created. The issue id is:",issueId);
+				} catch (Exception e) {
+
+				}
 			}
 
 		} catch (PersistenceException e) {
@@ -132,7 +140,17 @@ public class CreateTicketDAO {
 		}
 	}
 
-	public void findUserDetails(String emailId, String password) throws PersistenceException {
+	
+	public List<Issue> findUserDetails(Issue issue) throws PersistenceException{
+		return issueDao.findUserDetails(issue);
+	}
+	
+	
+	
+	
+	
+	
+/*	public void findUserDetails(String emailId, String password) throws PersistenceException {
 		LoginDAO loginDao = new LoginDAO();
 		try {
 			if (loginDao.login(emailId, password)) {
@@ -144,19 +162,13 @@ public class CreateTicketDAO {
 				user.setId(userId);
 				issueDao.findUserDetails(user.getId());
 
-				List<Issue> list = issueDao.findUserDetails(userId);
-				Iterator<Issue> i = list.iterator();
-				while (i.hasNext()) {
-					Issue issues = (Issue) i.next();
-					System.out.println(issues.getId() + "\t" + issues.getUserId().getId() + "\t" + issues.getSubject()
-							+ "\t" + issues.getDescription() + "\t" + issues.getStatus());
-				}
+				return;
 			}
 		} catch (PersistenceException e) {
 			throw new PersistenceException("Login Failed", e);
 		}
 
-	}
+	}*/
 
 	public void assignEmployee(String emailId, String password, int issueId, int employeeId)throws PersistenceException {
 		LoginDAO loginDao = new LoginDAO();
@@ -221,6 +233,12 @@ public class CreateTicketDAO {
 				else{
 					System.out.println("You are not assigned to this issue");
 				}
+				try {
+					MailUtil.sendSimpleMail(emailId,"The Solution for your query is as follows:"+ticketSolution+"-"+"Your ticket id is:",issueId);
+				} catch (Exception e) {
+
+				}
+				
 			}
 		} catch (PersistenceException e) {
 			throw new PersistenceException("Login Failed", e);
@@ -260,6 +278,7 @@ public class CreateTicketDAO {
 	}
 
 }
+
 	public void findEmployeeTickets(String emailId, String password) throws PersistenceException{
 		LoginDAO loginDao = new LoginDAO();
 		try {

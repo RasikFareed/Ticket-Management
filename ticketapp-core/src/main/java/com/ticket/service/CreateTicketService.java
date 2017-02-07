@@ -1,9 +1,12 @@
 package com.ticket.service;
 
+import java.util.List;
+
 import com.ticket.dao.CreateTicketDAO;
 import com.ticket.exception.PersistenceException;
 import com.ticket.exception.ServiceException;
 import com.ticket.exception.ValidatorException;
+import com.ticket.model.Issue;
 import com.ticket.validator.CreateTicketValidator;
 
 public class CreateTicketService {
@@ -55,8 +58,23 @@ public class CreateTicketService {
 
 		}
 	}
+	
+	
+	
+	public List<Issue> findUserDetails(Issue issue) throws ServiceException{
+		try {
+			return createTicketDao.findUserDetails(issue);
+		} catch (PersistenceException e) {
+			throw new ServiceException("Cannot View Ticket", e);
+		} 
+	}
+	
+	
+	
+	
+	
 
-	public void findUserDetails(String emailId, String password) throws ServiceException {
+/*	public void findUserDetails(String emailId, String password) throws ServiceException {
 
 		try {
 			createTicketValidator.findUserDetails(emailId, password);
@@ -65,7 +83,7 @@ public class CreateTicketService {
 			throw new ServiceException("Cannot View Ticket", e);
 
 		}
-	}
+	}*/
 
 	public void assignEmployee(String emailId, String password, int issueId, int employeeId) throws ServiceException {
 
@@ -90,6 +108,8 @@ public class CreateTicketService {
 		}
 	}
 	
+	
+
 	public void findEmployeeTickets(String emailId, String password) throws ServiceException{
 		
 		try {

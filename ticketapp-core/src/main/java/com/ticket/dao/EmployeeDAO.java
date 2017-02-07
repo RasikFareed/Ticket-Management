@@ -111,6 +111,19 @@ public class EmployeeDAO implements Dao<Employee> {
 		});
 	}
 	
+	public Employee findEmployeeEmailId(int employeeId) {
+		String sql = "SELECT EMAIL_ID FROM EMPLOYEES WHERE ID=?";
+		Object[] params = {employeeId};
+		return jdbcTemplate.queryForObject(sql, params, (rs, rowNo) -> {
+			Employee employee=new Employee();
+			employee.setEmailId(rs.getString("EMAIL_ID"));
+			return employee;
+		
+		});
+
+
+	}
+	
 	public Employee findDepartmentId(int employeeId) {
 		String sql = "SELECT DEPARTMENT_ID FROM EMPLOYEES WHERE ID = ? AND ACTIVE=1";
 		Object[] params = {employeeId};
