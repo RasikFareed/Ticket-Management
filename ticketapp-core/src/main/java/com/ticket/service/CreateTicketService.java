@@ -3,6 +3,7 @@ package com.ticket.service;
 import java.util.List;
 
 import com.ticket.dao.CreateTicketDAO;
+import com.ticket.dao.LoginDAO;
 import com.ticket.exception.PersistenceException;
 import com.ticket.exception.ServiceException;
 import com.ticket.exception.ValidatorException;
@@ -13,6 +14,7 @@ public class CreateTicketService {
 
 	CreateTicketValidator createTicketValidator = new CreateTicketValidator();
 	CreateTicketDAO createTicketDao = new CreateTicketDAO();
+	LoginDAO loginDao=new LoginDAO();
 
 	public void registration(String name, String emailId, String password) throws ServiceException {
 
@@ -21,6 +23,16 @@ public class CreateTicketService {
 			createTicketDao.registration(name, emailId, password);
 		} catch (ValidatorException | PersistenceException e) {
 			throw new ServiceException("Registration Failed", e);
+		}
+	}
+	
+	public void login(String emailId, String password) throws ServiceException {
+
+		try {
+			createTicketValidator.login(emailId, password);
+			loginDao.login(emailId, password);
+		} catch (ValidatorException | PersistenceException e) {
+			throw new ServiceException("Login Failed", e);
 		}
 	}
 
