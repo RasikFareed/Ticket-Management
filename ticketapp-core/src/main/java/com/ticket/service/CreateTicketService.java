@@ -122,7 +122,7 @@ public class CreateTicketService {
 	
 	
 
-	public void findEmployeeTickets(String emailId, String password) throws ServiceException{
+/*	public void findEmployeeTickets(String emailId, String password) throws ServiceException{
 		
 		try {
 			createTicketValidator.findEmployeeTickets(emailId,password);
@@ -132,7 +132,17 @@ public class CreateTicketService {
 
 		}
 		
+	}*/
+	
+	public List<Issue> findEmployeeTickets(String emailId,String password) throws ServiceException{
+		try {
+			return createTicketDao.findEmployeeTickets(emailId,password);
+		} catch (PersistenceException e) {
+			throw new ServiceException("Cannot View Ticket", e);
+		} 
 	}
+	
+	
 	public void deleteTickets(String emailId, String password, int issueId) throws ServiceException{
 		
 		try {

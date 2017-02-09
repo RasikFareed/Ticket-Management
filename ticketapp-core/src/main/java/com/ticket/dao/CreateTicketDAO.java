@@ -279,7 +279,19 @@ public class CreateTicketDAO {
 
 }
 
-	public void findEmployeeTickets(String emailId, String password) throws PersistenceException{
+	
+	public List<Issue> findEmployeeTickets(String emailId, String password) throws PersistenceException{
+		
+			Employee employee=new Employee();
+			EmployeeDAO employeeDao=new EmployeeDAO();
+			employee.setEmailId(emailId);
+			employee.setPassword(password);
+			int employeeId=employeeDao.findOne(emailId, password).getId();
+			return issueDao.findempTickets(employeeId);
+
+	}
+	
+/*	public void findEmployeeTickets(String emailId, String password) throws PersistenceException{
 		LoginDAO loginDao = new LoginDAO();
 		try {
 			if (loginDao.employeeLogin(emailId, password)) {
@@ -304,5 +316,6 @@ public class CreateTicketDAO {
 		throw new PersistenceException("Login Failed", e);
 	}
 		
-}
+}*/
+	
 }
